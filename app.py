@@ -1,9 +1,10 @@
 import sqlite3
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,jsonify
 import requests
 import re
 import markdown
-from hidream_client import HiDreamClient
+from routes.hidream_client import HiDreamClient
+from routes import spark_agent
 
 
 app = Flask(__name__)
@@ -30,7 +31,7 @@ def show_exhibit(hall_id):
 
 
 
-# 文物讲解 
+# 文物讲解 explain.html 
 SPARK_API_KEY = "hOsAqvPOPxkYNntIFelc:fSQoYvXRZLEDIoiKJrrj"
 SPARK_BASE_URL = "https://spark-api-open.xf-yun.com/v2"
 SPARK_API_PATH = "/chat/completions"
@@ -65,7 +66,7 @@ def call_spark_model(artifact_name, user_id="user_123456"):
     except requests.exceptions.ProxyError as e:
         return f"调用模型出错：代理连接失败，请检查代理设置。详细：{str(e)}"
     except requests.exceptions.SSLError as e:
-        return f"调用模型出错：SSL验证失败，请检查网络或证书。详细：{str(e)}"
+        return f"调用模型出错:SSL验证失败,请检查网络或证书。详细：{str(e)}"
     except Exception as e:
         return f"调用模型出错：{str(e)}"
 
@@ -83,7 +84,7 @@ def explain():
     return render_template('explain.html', explanation=explanation)
 
 
-# 图片生成
+# 图片生成 hidream.html hidream_client.py output_images
 # HiDream配置
 HIDREAM_APP_ID = "b5efc52c"
 HIDREAM_API_SECRET = "Zjg5ZTcyMjNjY2M1M2IwMzIxMDEwOWIy"
@@ -120,6 +121,38 @@ def hidream():
     
     return render_template('hidream.html')
 
+
+
+# 智能体 ai_agent.html  spark_agent.py
+
+def call_spark_agent_api(prompt):
+    # 这里是示例，替换成你的请求代码和鉴权
+    url = "https://xingchen-api.xf-yun.com/workflow/v1/chat/completion"
+    headers = {
+        "Content-Type": "application/json",
+        "X-Appid": "你的AppID",
+        "X-Api-Key": "你的APIKey",
+        # 其他鉴权头部...
+    }
+    data = {
+        "prompt": prompt,
+        # 其他请求参数
+    }
+    # 注意根据接口要求调整请求格式，以下示例为POST
+    resp = requests.post(url, headers=headers, json=data)
+    resp.raise_for_status()
+    return resp.json()
+
+@app.route("/ai_agent", methods=["GET", "POST"])
+def ai_agent():
+    if request.method == "GET":
+        return render_template("ai_agent.html")
+    # POST 请求
+    user_input = request.form.get("user_input", "")
+    if not user_input.strip():
+        return jsonify({"error": "输入不能为空"})
+    result = spark_agent.send_message(user_input)
+    return jsonify(result)
 
 
 

@@ -82,8 +82,9 @@ button:hover {
         <a href="/exhibit/3"><button>第三展厅：秦汉唐</button></a>
         <a href="/exhibit/4"><button>第四展厅：宋元明清</button></a>
         <br></br>
-        <a href="/explain"><button>🔊 智能讲解</button></a>
-        <a href="/hidream"><button>🎨 AI图片生成</button></a>
+        <a href="{{ url_for("explain")}}"><button>🔊 智能讲解</button></a>
+        <a href="{{ url_for("hidream")}}"><button>🎨 AI图片生成</button></a>
+        <a href="{{ url_for("ai_agent")}}"><button>🤖 AI智能体</button></a>
         
     </div>
 </body>

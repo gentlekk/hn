@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8" />
+    <title>智能体讲解助手</title>
+    <style>
+        body {
+        font-family: "微软雅黑", sans-serif;
+        background-color: #f5f5e8;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        }
+        #header {
+        background-color: #8c6239;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        }
+        .chat-container { max-width: 600px; margin: 30px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 8px #ccc; }
+        .chat-log { height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #fafafa; }
+        .chat-entry { margin: 10px 0; }
+        .user { text-align: right; color: #007bff; }
+        .assistant { text-align: left; color: #28a745; }
+        input[type=text] { width: 80%; padding: 8px; font-size: 16px; }
+        button { padding: 8px 15px; font-size: 16px; }
+        audio { max-width: 100%; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h1>🧠 智能讲解助手</h1>
+        <a href="/" style="color: white">← 返回首页</a>
+    </div>
+    <div class="chat-container">
+        <div id="chat-log" class="chat-log"></div>
+        <form id="chat-form">
+            <input type="text" id="user-input" placeholder="请输入内容..." autocomplete="off" required />
+            <button type="submit">发送</button>
+        </form>
+    </div>
+
+    <script>
+        const chatLog = document.getElementById("chat-log");
+        const chatForm = document.getElementById("chat-form");
+        const userInput = document.getElementById("user-input");
+
+        function appendMessage(role, text, audioUrl = null) {
+            const div = document.createElement("div");
+            div.className = "chat-entry " + role;
+            div.textContent = text;
+            chatLog.appendChild(div);
+            if (audioUrl) {
+                const audio = document.createElement("audio");
+                audio.controls = true;
+                audio.src = audioUrl;
+                chatLog.appendChild(audio);
+            }
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+
+        chatForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            appendMessage("user", text);
+            userInput.value = "";
+            userInput.disabled = true;
+
+            try {
+                const response = await fetch("/ai_agent", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams({ user_input: text })
+                });
+                const data = await response.json();
+
+                if (data.error) {
+                    appendMessage("assistant", "❌ 错误：" + data.error);
+                } else {
+                    appendMessage("assistant", data.text, data.audio);
+                }
+            } catch (err) {
+                appendMessage("assistant", "❌ 请求异常：" + err.message);
+            } finally {
+                userInput.disabled = false;
+                userInput.focus();
+            }
+        });
+    </script>
+</body>
+</html>
