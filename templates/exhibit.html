@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>展厅 {{ hall_id }} 展品</title>
+    <style> 
+    body {
+    font-family: "微软雅黑", sans-serif;
+    background-color: #f5f5e8;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    }
+    #header {
+    background-color: #8c6239;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    }
+    .gallery {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    }
+    .card {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin: 15px;
+    padding: 15px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+    }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h1>第 {{ hall_id }} 展厅 · {{hall_name}}</h1>
+        <p style="font-size: 18px; margin-bottom: 20px;">{{ hall_desc }}</p>
+        <a href="/" style="color: white">← 返回首页</a>
+    </div>
+
+    <div class="gallery">
+        {% for artifact in artifacts %}
+        <div class="card">
+            <img src="{{ artifact[2] }}" alt="{{ artifact[0] }}" width="200">
+            <h3>{{ artifact[0] }}</h3>
+            <p>{{ artifact[1] }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
