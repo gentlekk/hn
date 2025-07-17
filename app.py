@@ -11,7 +11,29 @@ app = Flask(__name__)
 # 主页面 index.html
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # 轮播图获取图片
+    images = [
+       "images/10001.jpg",
+       "images/10002.jpg",
+       "images/10003.jpg",
+       "images/10004.jpg",
+       "images/10005.jpg",
+       "images/10006.jpg",
+       "images/10007.jpg",
+       "images/10008.jpg",
+       "images/10009.jpg",
+       "images/10010.jpg",
+       "images/10011.jpg",
+       "images/10012.jpg",
+    ]
+    floor_imgs = [
+        "images/凤砖.jpg",
+        "images/三轮车.jpg",
+        "images/三彩狮面镇墓兽.jpg",
+        "images/天蓝釉荷叶花口瓶.jpg",
+        "images/利簋.jpg",
+    ]
+    return render_template('index.html',images=images,imgs=floor_imgs)
 
 # 展馆页面 exhibit.html
 @app.route('/exhibit/<int:hall_id>')

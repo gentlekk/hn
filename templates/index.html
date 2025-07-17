@@ -2,7 +2,12 @@
 <html>
 <head>
     <title>河南省博物院 · 文物展示</title>
-    <style> 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
     body {
     font-family: "微软雅黑", sans-serif;
     background-color: #f5f5e8;
@@ -10,27 +15,19 @@
     margin: 0;
     padding: 0;
 }
+
 #header {
     background-color: #8c6239;
     color: white;
     padding: 20px;
     text-align: center;
 }
-    .triangle {
-      white-space: pre;
-      text-align: center;
-      line-height: 2;
-      max-width: 1000px;
-      margin: 40px auto;
-      margin-bottom: 10px;
-      font-size: 18px;
-      color: #333;
-    }
     .floor {
     text-align: center;
     margin: -30px;
+    margin-bottom: 20px;
 }
-button {
+.buttons {
     margin: 10px;
     padding: 15px 25px;
     font-size: 16px;
@@ -40,8 +37,18 @@ button {
     border-radius: 8px;
     cursor: pointer;
 }
-button:hover {
+.buttons:hover {
     background-color: #5c4033;
+}
+#carouselVideo { 
+  width: 1000px;
+  height: 500px;
+  margin: 0 auto;
+}
+#ai{
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
 }
     </style>
 </head>
@@ -49,43 +56,101 @@ button:hover {
     <div id="header">
         <h1>河南省博物院 · 文物展示</h1>
         <p>欢迎来到河南博物院，一场穿越五千年文明的文化之旅。</p>
+         <marquee behavior="" direction="" loop="-1" scrolldelay="3"><p>每一件文物，都是历史的凝固瞬间。它或许是先民手中的陶罐，承载着烟火人间的温度；或许是古刹里的经卷，记录着信仰传承的脉络；或许是王侯的礼器，折射着时代的典章制度。
+它们沉默无言，却用纹路、材质与工艺诉说着千百年前的故事，让我们得以触摸文明的肌理，读懂岁月的厚重。在这里，每一件文物都是连接过去与现在的桥梁，等待你聆听它的低语。</p></marquee>
     </div>
 
-    <div class="triangle">河南博物院创建于1927年，是我国创办较早的大型综合性博物馆之一，位于河南省郑州市农业路中段,占地126亩，建筑面积达5.5万平方米
-    现有馆藏文物17万余件（套），尤以史前遗存、商周青铜器、历代陶瓷、玉器与石刻最为特色鲜明，堪称中华文明的重要见证
-    作为河南省的文化地标，河南博物院承载着深厚的中华优秀传统文化
-公众得以探寻中华五千年文明的脉络，感受源远流长的文化底蕴。
-        二十年来，河南博物院始终给人以震撼和感动——
-            不仅因其浩瀚丰富的藏品、络绎不绝的参观人群，
-                更因每一件文物所蕴含的历史记忆与文化精神，
-                    唤起我们强烈的民族认同与文化自信。
+    <!-- 轮播图 -->
+    <div class="carousel-container" style="max-width: 1000px; margin: 40px auto;">
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for image in images %}
+            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                <img src="{{ url_for('static', filename=image) }}" class="d-block w-100" alt="轮播图">
+            </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </button>
+        </div>
     </div>
 
+
+
+
+
+    <!-- 导航部分 -->
     <div class="floor">
-        <h2>主展馆展厅</h2>
-
-
-        <a href="/exhibit/12"><button>巧工遗珍：院藏明清宝珍</button></a>
-        <a href="/exhibit/13"><button>中原楚国：青铜艺术</button></a>
-        <br>
-        <a href="/exhibit/9"><button>第九展厅：宋元明清</button></a>
-        <a href="/exhibit/10"><button>第十展厅：宋元明清</button></a>
-        <a href="/exhibit/11"><button>明清河南：重点文物</button></a>
-        <br>
-        <a href="/exhibit/5"><button>第五展厅：宋元明清</button></a>
-        <a href="/exhibit/6"><button>第六展厅：宋元明清</button></a>
-        <a href="/exhibit/7"><button>第七展厅：宋元明清</button></a>
-        <a href="/exhibit/8"><button>第八展厅：宋元明清</button></a>
-        <br>
-        <a href="/exhibit/1"><button>第一展厅:走向邦国-新石器</button></a>
-        <a href="/exhibit/2"><button>第二展厅：夏商周</button></a>
-        <a href="/exhibit/3"><button>第三展厅：秦汉唐</button></a>
-        <a href="/exhibit/4"><button>第四展厅：宋元明清</button></a>
-        <br></br>
-        <a href="{{ url_for("explain")}}"><button>🔊 智能讲解</button></a>
-        <a href="{{ url_for("hidream")}}"><button>🎨 AI图片生成</button></a>
-        <a href="{{ url_for("ai_agent")}}"><button>🤖 AI智能体</button></a>
-        
+        <a href="/exhibit/1">
+            <button class="buttons">新石器时期
+                <img src="{{ url_for("static",filename=imgs[0])}}" alt="" style="width: 200px;height: 200px;"></img>
+            </button>
+        </a>
+        <a href="/exhibit/2">
+            <button class="buttons">夏商周
+                <img src="{{ url_for("static",filename=imgs[1])}}" alt="" style="width: 200px;height: 200px;"></img>
+            </button>
+        </a>
+        <a href="/exhibit/3">
+            <button class="buttons">秦汉唐
+                <img src="{{ url_for("static",filename=imgs[2])}}" alt="" style="width: 200px;height: 200px;"></img>
+            </button>
+        </a>
+        <a href="/exhibit/4">
+            <button class="buttons">宋元明清
+                <img src="{{ url_for("static",filename=imgs[3])}}" alt="" style="width: 200px;height: 200px;"></img>
+            </button>
+        </a>
+        <a href="/exhibit/5">
+            <button class="buttons">青铜艺术
+                <img src="{{ url_for("static",filename=imgs[4])}}" alt="" style="width: 200px;height: 200px;"></img>
+            </button>
+        </a>
     </div>
+
+    <!-- 视频背景 -->
+    <div class="video-carousel">
+        <!-- 视频元素：自动播放、循环、静音（提高兼容性） -->
+        <video id="carouselVideo" autoplay loop muted playsinline>
+            <source src="{{ url_for('static', filename='videos/video.mp4') }}" type="video/mp4">
+                您的浏览器不支持HTML5视频播放
+        </video>
+    </div>     
+
+    <!-- 智能模块 -->
+    <div id="ai">
+        <a href="{{ url_for("hidream")}}"><img src="../static/images/labubu.gif" alt="" style="height: 240px;margin-right: 20px;margin-right: 20px;"></a>
+        <a href="{{ url_for("ai_agent")}}"><img src="../static/images/clicktalk.jpg" alt="" style="width: 426px;height: 240px;margin-right: 20px;"></a>
+        <a href="{{ url_for("explain")}}"><img src="../static/images/clickjh.jpg" alt="" style="width: 426px;height: 240px;margin-right: 20px;"></a>
+    </div>
+
+ <script>
+        // 增强兼容性的自动播放处理
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('carouselVideo');
+            
+            // 尝试播放视频，处理可能的自动播放限制
+            video.play().catch(error => {
+                console.log('自动播放需要用户交互:', error);
+                
+                // 显示提示，引导用户点击播放
+                const indicator = document.querySelector('.play-indicator');
+                indicator.innerHTML = '<i class="fa fa-hand-pointer-o mr-1"></i> 点击开始播放';
+                indicator.classList.add('bg-red-500');
+                
+                // 点击任意位置播放视频
+                document.addEventListener('click', function startPlay() {
+                    video.play();
+                    indicator.innerHTML = '<i class="fa fa-play-circle mr-1"></i> 自动播放中...';
+                    indicator.classList.remove('bg-red-500');
+                    document.removeEventListener('click', startPlay); // 只触发一次
+                });
+            });
+        });
+    </script>
 </body>
 </html>
