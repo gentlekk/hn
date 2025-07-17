@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>综合导航（地名+坐标混输）</title>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style>
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: "微软雅黑";
+    background: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+#container {
+    display: flex;
+    width: 90vw;
+    height: 80vh;
+    background: white;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+#panel {
+    width: 320px;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #fff;
+    overflow-y: auto;
+    box-shadow: 2px 0 6px rgba(0,0,0,0.1);
+}
+input, select, button {
+    width: 100%;
+    margin: 5px 0;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+#result {
+    margin-top: 10px;
+    font-size: 14px;
+    max-height: 80px;
+    overflow-y: auto;
+}
+#routePanel {
+    margin-top: 10px;
+    font-size: 14px;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 5px;
+    background: #fafafa;
+    border-radius: 4px;
+}
+#map {
+    flex-grow: 1;
+    height: 100%;
+}
+</style>
+<script src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=7r6ZcsSPnohgHTpn20LsUEfunC6S5vW8"></script>
+</head>
+<body>
+
+<div id="container">
+  <div id="panel">
+      <b>🗺️ 综合导航</b><br><br>
+      起点：
+      <input type="text" id="start" value="百度大厦" />
+      终点：
+      <input type="text" id="end" value="天安门" />
+      出行方式：
+      <select id="mode">
+          <option value="driving">🚗 驾车</option>
+          <option value="walking">🚶 步行</option>
+          <option value="riding">🚴 骑行</option>
+          <option value="transit">🚌 公交</option>
+      </select>
+      公交策略：
+      <select id="policy">
+          <option value="0">推荐方案</option>
+          <option value="1">最少时间</option>
+          <option value="2">最少换乘</option>
+          <option value="3">最少步行</option>
+          <option value="4">不乘地铁</option>
+          <option value="5">优先地铁</option>
+      </select>
+      <button onclick="searchRoute()">查询路线</button>
+      <div id="result"></div>
+      <div id="routePanel"></div>
+      <br />
+      关键字搜索：
+      <input type="text" id="keyword" value="景点" />
+      <button onclick="searchKeyword()">搜索关键字</button>
+  </div>
+
+  <div id="map"></div>
+</div>
+
+<script>
+var map = new BMapGL.Map("map");
+var geolocation = new BMapGL.Geolocation();
+geolocation.getCurrentPosition(function(r) {
+    if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+        var userPoint = r.point;
+        map.centerAndZoom(userPoint, 15);
+        map.addOverlay(new BMapGL.Marker(userPoint));
+    } else {
+        alert("定位失败，将显示默认位置：北京");
+        map.centerAndZoom(new BMapGL.Point(116.404, 39.915), 13);
+    }
+});
+map.enableScrollWheelZoom(true);
+
+function clearMap() {
+    map.clearOverlays();
+    document.getElementById("result").innerHTML = "";
+    document.getElementById("routePanel").innerHTML = "";
+}
+
+// 解析地名或坐标字符串为坐标点，callback 返回 BMapGL.Point
+function parseToPoint(str, callback) {
+    if (str.includes(",")) {
+        let [lng, lat] = str.split(",").map(Number);
+        if (!isNaN(lng) && !isNaN(lat)) {
+            callback(new BMapGL.Point(lng, lat));
+            return;
+        }
+    }
+    let geocoder = new BMapGL.Geocoder();
+    geocoder.getPoint(str, function(point) {
+        if (point) callback(point);
+        else alert("无法解析位置: " + str);
+    });
+}
+
+function searchRoute() {
+    clearMap();
+    let mode = document.getElementById("mode").value;
+    let policyIndex = parseInt(document.getElementById("policy").value);
+    let policies = [
+        BMAP_TRANSIT_POLICY_RECOMMEND,
+        BMAP_TRANSIT_POLICY_LEAST_TIME,
+        BMAP_TRANSIT_POLICY_LEAST_TRANSFER,
+        BMAP_TRANSIT_POLICY_LEAST_WALKING,
+        BMAP_TRANSIT_POLICY_AVOID_SUBWAYS,
+        BMAP_TRANSIT_POLICY_FIRST_SUBWAYS,
+    ];
+
+    let startVal = document.getElementById("start").value.trim();
+    let endVal = document.getElementById("end").value.trim();
+
+    if (mode === "walking" || mode === "riding") {
+        // 直接用字符串起终点，调用search(起点字符串, 终点字符串)
+        if (mode === "walking") {
+            let walking = new BMapGL.WalkingRoute(map, {
+                renderOptions: { map: map, panel: "routePanel", autoViewport: true },
+                onSearchComplete: function(results) {
+                    if (walking.getStatus() !== BMAP_STATUS_SUCCESS) {
+                        alert("步行路线查询失败，状态码：" + walking.getStatus());
+                    }
+                },
+            });
+            walking.search(startVal, endVal);
+            document.getElementById("result").innerHTML = "";
+        } else if (mode === "riding") {
+            let riding = new BMapGL.RidingRoute(map, {
+                renderOptions: { map: map, panel: "routePanel", autoViewport: true },
+                onSearchComplete: function(results) {
+                    if (riding.getStatus() !== BMAP_STATUS_SUCCESS) {
+                        alert("骑行路线查询失败，状态码：" + riding.getStatus());
+                    }
+                },
+            });
+            riding.search(startVal, endVal);
+            document.getElementById("result").innerHTML = "";
+        }
+    } else {
+        // 驾车和公交，先解析坐标点，再调用search
+        parseToPoint(startVal, function(start) {
+            parseToPoint(endVal, function(end) {
+                if (mode === "driving") {
+                    let driving = new BMapGL.DrivingRoute(map, {
+                        renderOptions: { map: map, autoViewport: true },
+                        onSearchComplete: function(results) {
+                            if (driving.getStatus() === BMAP_STATUS_SUCCESS) {
+                                let plan = results.getPlan(0);
+                                let time = plan.getDuration(true);
+                                let dist = plan.getDistance(true);
+                                document.getElementById("result").innerHTML =
+                                    `🚗 驾车<br>时间：${time}<br>距离：${dist}`;
+                                document.getElementById("routePanel").innerHTML = "";
+                            } else {
+                                document.getElementById("result").innerHTML = "驾车路线查询失败";
+                            }
+                        },
+                    });
+                    driving.search(start, end);
+                } else if (mode === "transit") {
+                    let transit = new BMapGL.TransitRoute(map, {
+                        renderOptions: { map: map, panel: "routePanel", autoViewport: true },
+                        policy: policies[policyIndex],
+                    });
+                    transit.search(start, end);
+                    document.getElementById("result").innerHTML = "";
+                }
+            });
+        });
+    }
+}
+
+// 输入提示
+var ac_start = new BMapGL.Autocomplete({ input: "start", location: map });
+var ac_end = new BMapGL.Autocomplete({ input: "end", location: map });
+ac_start.addEventListener("onconfirm", function(e) {
+    var _value = e.item.value;
+    var address =
+        _value.province + _value.city + _value.district + _value.street + _value.business;
+    document.getElementById("start").value = address;
+});
+ac_end.addEventListener("onconfirm", function(e) {
+    var _value = e.item.value;
+    var address =
+        _value.province + _value.city + _value.district + _value.street + _value.business;
+    document.getElementById("end").value = address;
+});
+
+var localSearch = new BMapGL.LocalSearch(map, { renderOptions: { map: map } });
+function searchKeyword() {
+    let keyword = document.getElementById("keyword").value.trim();
+    if (keyword) {
+        clearMap();
+        localSearch.search(keyword);
+        document.getElementById("result").innerHTML = `🔎 关键字“${keyword}”检索中...`;
+    } else {
+        alert("请输入关键字");
+    }
+}
+</script>
+</body>
+</html>
