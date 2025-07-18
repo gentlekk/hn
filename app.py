@@ -28,9 +28,14 @@ def index():
     ]
     floor_imgs = [
         "images/凤砖.jpg",
-        "images/三轮车.jpg",
-        "images/三彩狮面镇墓兽.jpg",
-        "images/天蓝釉荷叶花口瓶.jpg",
+        "images/夏商时期.jpg",
+        "images/西周时期.jpg",
+        "images/东周时期.jpg",
+        "images/秦汉时期.jpg",
+        "images/魏晋南北朝时期.jpg",
+        "images/隋唐时期.jpg",
+        "images/宋金元时期.jpg",
+        "images/明清时期.jpg",
         "images/利簋.jpg",
     ]
     return render_template('index.html',images=images,imgs=floor_imgs)
@@ -177,7 +182,10 @@ def ai_agent():
     return jsonify(result)
 
 
-
+# 地图
+@app.route("/map", methods=["GET", "POST"])
+def map():
+    return render_template("map.html")
 
 
 if __name__ == '__main__':

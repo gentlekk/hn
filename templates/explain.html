@@ -29,18 +29,21 @@
         text-align: center;
         margin: 40px auto;
     }
+    #explanation p { 
+        font-size: 18px;
+    }
      </style>
 </head>
 <body>
     <div id="header"> 
-        <h1>🎤 河南博物院 · 智能讲解</h1>
+        <h1>🎤 智能讲解</h1>
         <a href="/" style="color: white">← 返回首页</a>
     </div>
     
     <div id="form">
         <form method="post" action="/explain">
         <label for="artifact_name">输入文物名称：</label>
-        <input type="text" name="artifact_name" required>
+        <input type="text" name="artifact_name" required placeholder="请输入文物名称">
         <button type="submit">生成讲解</button>
     </form>
     </div>

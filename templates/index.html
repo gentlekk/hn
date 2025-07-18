@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>河南省博物院 · 文物展示</title>
+    <title>历史的温度，文物之旅</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -22,6 +22,12 @@
     padding: 20px;
     text-align: center;
 }
+.h{
+    font-size: xx-large;
+}
+#header p{ 
+    font-size: large;
+}
     .floor {
     text-align: center;
     margin: -30px;
@@ -41,8 +47,8 @@
     background-color: #5c4033;
 }
 #carouselVideo { 
-  width: 1000px;
-  height: 500px;
+  width: 1500px;
+  height: 1000px;
   margin: 0 auto;
 }
 #ai{
@@ -54,14 +60,14 @@
 </head>
 <body>
     <div id="header">
-        <h1>河南省博物院 · 文物展示</h1>
-        <p>欢迎来到河南博物院，一场穿越五千年文明的文化之旅。</p>
+        <p class="h">遨游文物世界</p> <br>
+        <p>欢迎来到历史的记忆力这是一场穿越五千年文明的文化之旅。</p>
          <marquee behavior="" direction="" loop="-1" scrolldelay="3"><p>每一件文物，都是历史的凝固瞬间。它或许是先民手中的陶罐，承载着烟火人间的温度；或许是古刹里的经卷，记录着信仰传承的脉络；或许是王侯的礼器，折射着时代的典章制度。
 它们沉默无言，却用纹路、材质与工艺诉说着千百年前的故事，让我们得以触摸文明的肌理，读懂岁月的厚重。在这里，每一件文物都是连接过去与现在的桥梁，等待你聆听它的低语。</p></marquee>
     </div>
 
     <!-- 轮播图 -->
-    <div class="carousel-container" style="max-width: 1000px; margin: 40px auto;">
+    <div class="carousel-container" style="max-width: 1500px; margin: 40px auto;">
         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-inner">
             {% for image in images %}
@@ -85,29 +91,60 @@
 
     <!-- 导航部分 -->
     <div class="floor">
-        <a href="/exhibit/1">
+        <a href="/exhibit/1" style="margin-right: 30px;">
             <button class="buttons">新石器时期
                 <img src="{{ url_for("static",filename=imgs[0])}}" alt="" style="width: 200px;height: 200px;"></img>
             </button>
         </a>
-        <a href="/exhibit/2">
-            <button class="buttons">夏商周
+        <a href="/exhibit/2" style="margin-right: 30px;">
+            <button class="buttons">夏商时期
                 <img src="{{ url_for("static",filename=imgs[1])}}" alt="" style="width: 200px;height: 200px;"></img>
             </button>
-        </a>
-        <a href="/exhibit/3">
-            <button class="buttons">秦汉唐
+        
+        </a><a href="/exhibit/3" style="margin-right: 30px;">
+            <button class="buttons">西周时期
                 <img src="{{ url_for("static",filename=imgs[2])}}" alt="" style="width: 200px;height: 200px;"></img>
             </button>
+        
         </a>
-        <a href="/exhibit/4">
-            <button class="buttons">宋元明清
+        <a href="/exhibit/4" style="margin-right: 30px;">
+            <button class="buttons">东周时期
                 <img src="{{ url_for("static",filename=imgs[3])}}" alt="" style="width: 200px;height: 200px;"></img>
             </button>
+        
         </a>
-        <a href="/exhibit/5">
-            <button class="buttons">青铜艺术
+        <a href="/exhibit/5" style="margin-right: 30px;">
+            <button class="buttons">秦汉时期
                 <img src="{{ url_for("static",filename=imgs[4])}}" alt="" style="width: 200px;height: 200px;"></img>
+            </button>
+        </a>
+        <br>
+        <a href="/exhibit/6" style="margin-right: 30px;">
+            <button class="buttons">魏晋南北朝时期
+                <img src="{{ url_for("static",filename=imgs[5])}}" alt="" style="width: 200px;height: 200px;"></img>
+            </button>
+        
+        </a>
+        <a href="/exhibit/7" style="margin-right: 30px;">
+            <button class="buttons">隋唐时期
+                <img src="{{ url_for("static",filename=imgs[6])}}" alt="" style="width: 200px;height: 200px;"></img>
+            </button>
+        
+        </a>
+        <a href="/exhibit/8" style="margin-right: 30px;">
+            <button class="buttons">宋金元时期
+                <img src="{{ url_for("static",filename=imgs[7])}}" alt="" style="width: 200px;height: 200px;"></img>
+            </button>
+        
+        </a>
+        <a href="/exhibit/9" style="margin-right: 30px;">
+            <button class="buttons">明清时期
+                <img src="{{ url_for("static",filename=imgs[8])}}" alt="" style="width: 200px;height: 200px;"></img>
+            </button>
+        </a>
+        <a href="/exhibit/10" style="margin-right: 30px;">
+            <button class="buttons">青铜艺术
+                <img src="{{ url_for("static",filename=imgs[9])}}" alt="" style="width: 200px;height: 200px;"></img>
             </button>
         </a>
     </div>
@@ -123,9 +160,10 @@
 
     <!-- 智能模块 -->
     <div id="ai">
-        <a href="{{ url_for("hidream")}}"><img src="../static/images/labubu.gif" alt="" style="height: 240px;margin-right: 20px;margin-right: 20px;"></a>
-        <a href="{{ url_for("ai_agent")}}"><img src="../static/images/clicktalk.jpg" alt="" style="width: 426px;height: 240px;margin-right: 20px;"></a>
-        <a href="{{ url_for("explain")}}"><img src="../static/images/clickjh.jpg" alt="" style="width: 426px;height: 240px;margin-right: 20px;"></a>
+        <a href="{{ url_for("hidream")}}"><img src="../static/images/labubu.gif" alt="" style="width: 332px;height: 332px;margin-right: 50px;margin-left: 30px;"></a>
+        <a href="{{ url_for("ai_agent")}}"><img src="../static/images/clicktalk.png" alt="" style="width: 332px;height: 332px;margin-right: 50px;margin-left: 20px;"></a>
+        <a href="{{ url_for("explain")}}"><img src="../static/images/clickjh.png" alt="" style="width: 332px;height: 332px;margin-right: 50px;margin-left: 20px;"></a>
+        <a href="{{ url_for("map") }}"><img src="../static/images/导航图标.png" alt="" style="width: 332px;height: 332px;margin-right: 50px; margin-left: 20px;"></a>
     </div>
 
  <script>

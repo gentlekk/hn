@@ -17,25 +17,62 @@
         padding: 20px;
         text-align: center;
         }
-        .chat-container { max-width: 600px; margin: 30px auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 8px #ccc; }
-        .chat-log { height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #fafafa; }
-        .chat-entry { margin: 10px 0; }
-        .user { text-align: right; color: #007bff; }
-        .assistant { text-align: left; color: #28a745; }
-        input[type=text] { width: 80%; padding: 8px; font-size: 16px; }
-        button { padding: 8px 15px; font-size: 16px; }
-        audio { max-width: 100%; margin-top: 5px; }
+        .chat-container {
+            max-width: 600px; 
+            margin: 30px auto; 
+            background: #fff; 
+            padding: 20px; 
+            border-radius: 8px; 
+            box-shadow: 0 0 8px #ccc;  }
+        .chat-log {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background: #fafafa; }
+        .chat-entry {
+            margin: 10px 0; }
+        .user {
+            text-align: right;
+            color: #007bff; }
+        .assistant {
+            text-align: left;
+            color: #28a745; }
+        input[type=text] {
+            width: 80%;
+            padding: 8px;
+            font-size: 16px; }
+        button {
+            padding: 8px 15px;
+            font-size: 16px; }
+        audio { max-width: 100%;
+            margin-top: 5px; }
+        #tips {
+            height: 150px;
+            width: 800px;
+            margin: 0 auto;
+            margin-bottom: 10px;
+        }
+        #tips p{ 
+            font-size: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div id="header">
-        <h1>🧠 智能讲解助手</h1>
+        <h1>🧠智能对话</h1>
         <a href="/" style="color: white">← 返回首页</a>
+    </div>
+    <div id="tips">
+        <p> Hi!你好，你想去哪里玩？，我可以来给你解答，一下是输入例子，来试试吧！</p>
+        <p>请帮我介绍国家博物馆</p>
+        <p>请帮我介绍洛阳博物馆的北魏彩陶牵手女佣</p>
     </div>
     <div class="chat-container">
         <div id="chat-log" class="chat-log"></div>
         <form id="chat-form">
-            <input type="text" id="user-input" placeholder="请输入内容..." autocomplete="off" required />
+            <input type="text" id="user-input" placeholder="你好，想去哪里玩？" autocomplete="off" required />
             <button type="submit">发送</button>
         </form>
     </div>
