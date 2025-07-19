@@ -61,6 +61,10 @@ input, select, button {
     flex-grow: 1;
     height: 100%;
 }
+#speed{
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
 </style>
 <script src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=7r6ZcsSPnohgHTpn20LsUEfunC6S5vW8"></script>
 </head>
@@ -95,7 +99,22 @@ input, select, button {
       关键字搜索：
       <input type="text" id="keyword"  placeholder="请输入地点"/>
       <button onclick="searchKeyword()">搜索关键字</button>
-      <br><br>
+
+      <div id="speed">
+            <div id="museum-buttons">
+                <p>快速导航，点击下方按钮即可快速导航哦！</p>
+                <button onclick="goToMuseum('河南博物院')">河南博物院</button>
+                <button onclick="goToMuseum('中国国家博物馆')">国家博物馆</button>
+                <button onclick="goToMuseum('故宫博物院')">故宫博物院</button>
+                <button onclick="goToMuseum('西安博物院')">西安博物院</button>
+                <button onclick="goToMuseum('洛阳博物馆')">洛阳博物馆</button>
+                <button onclick="goToMuseum('南京博物院')">南京博物院</button>
+            </div>
+        </div>
+        
+
+
+      
       <a href="/" ><button>返回首页</button></a>
   </div>
 
@@ -241,6 +260,46 @@ function searchKeyword() {
         alert("请输入关键字");
     }
 }
+
+
+function goToMuseum(museumName) {
+    geolocation.getCurrentPosition(function(r) {
+        if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+            let userPoint = r.point;
+            document.getElementById("start").value = `${userPoint.lng},${userPoint.lat}`;
+            document.getElementById("end").value = museumName;
+            // 你可以默认使用驾车方式或根据选择走searchRoute
+            document.getElementById("mode").value = "driving";
+            searchRoute();
+        } else {
+            alert("定位失败，无法进行导航");
+        }
+    });
+}
+
+
+// 添加定位控件
+var locationControl = new BMapGL.LocationControl({
+    anchor: BMAP_ANCHOR_TOP_RIGHT,
+    offset: new BMapGL.Size(20, 20)
+});
+map.addControl(locationControl);
+
+// 定位成功事件
+locationControl.addEventListener("locationSuccess", function(e){
+    var address = '';
+    address += e.addressComponent.province;
+    address += e.addressComponent.city;
+    address += e.addressComponent.district;
+    address += e.addressComponent.street;
+    address += e.addressComponent.streetNumber;
+    alert("📍 定位成功：当前地址 " + address);
+});
+
+// 定位失败事件
+locationControl.addEventListener("locationError",function(e){
+    alert("❌ 定位失败：" + e.message);
+});
 </script>
 </body>
 </html>
